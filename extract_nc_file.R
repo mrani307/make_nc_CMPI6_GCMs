@@ -1,6 +1,6 @@
 #Aniruddha Saha
 #aniruddha_s@hy.iitr.ac.in
-#CODE RUN at line 147
+#CODE RUN at line 163
 
 #library ---------------
 library(raster)
@@ -73,15 +73,14 @@ prepare_ncFile<-function(prec,y,var,save.dest) {
   ncatt_put(ncout, 0, "References", "https://doi.org/10.1038/s41597-020-00681-1")
   
   # Placing the precip/tmax/tmin values in the file need to loop through the layers to get them to match to correct time index
-  for (i in 1:nlayers(prec)) { 
+  for (i in 1:nlayers(prec)) 
     ncvar_put(nc = ncout, varid = var_prec, vals = values(prec[[i]]), 
               start = c(1, 1, i), count = c(-1, -1, 1))
-    
-  }
   
   # Close the netcdf file when finished adding variables
   nc_close(ncout)
 }
+
 
 
 makeRaster<-function(r){
@@ -98,7 +97,9 @@ makeRaster<-function(r){
     return(r)
 }
 
-convert_to_nc<-function(file.dest,start.year,end.year,var, save.dest, study.region){
+
+
+convert_to_nc<-function(file.dest,start.year,end.year,var,save.dest,study.region){
   
   #'1.Reads the .txt precip/tmin/tmax file,
   #'2.Extracts year wise data for the whole region, 
@@ -134,10 +135,10 @@ convert_to_nc<-function(file.dest,start.year,end.year,var, save.dest, study.regi
     
   #checking if the study region data exists
     flag<-1
-    if(is.null(study.region)==F)
+    if(is.null(study.region))
       flag<-0
   
-  #extracting data for each date and storing it year wise
+  #function to extract data for each date and storing it year wise
     prepare_raster_and_nc_yearWise<-function(y)
     {
       pos<-which(date.df$year==y)
@@ -152,8 +153,10 @@ convert_to_nc<-function(file.dest,start.year,end.year,var, save.dest, study.regi
       }
       names(r.list)<-date[pos]
       r.stack<-stack(r.list)   
-      prepare_ncFile(prec = r.stack,y= y, var= var,save.dest=save.dest)
+      prepare_ncFile(prec = r.stack, y = y, var = var, save.dest = save.dest)
     }
+  
+  #extracting data for each date and storing it year wise
     lapply(c(start.year:end.year), prepare_raster_and_nc_yearWise)
 }
 
@@ -166,17 +169,17 @@ convert_to_nc<-function(file.dest,start.year,end.year,var, save.dest, study.regi
   #converts the Tmin data for the year 2030 to 2040 and crop it to the study region shapefile
 
     #INPUT  : file.dest    - path of the "Tmin" file
-    #         start.year   - starting year (starts from 2015)
-    #         end.year     - ending year   (ends at 2100)
+    #         start.year   - starting year 
+    #         end.year     - ending year   
     #         var          - name of variable ("Precip"/"Tmin"/"Tmax")
     #         save.dest    - path of the directory where the yearly .nc files are to be saved
     #         study.region - (OPTIONAL) shapefile for which the .nc files shall be clipped
     #OUTPUT : yearly .nc files shall be saved in save.dest
-    convert_to_nc(file.dest = "C:/Users/merul/OneDrive - iitr.ac.in/PhD_Research/GCM/Mahi/ACCESS-CM2/ssp126/TMinData", #path of PrecipData/TMinData/TMaxData file
-                  start.year = 2018,
+    convert_to_nc(file.dest = "Mahi/ACCESS-CM2/ssp126/TMinData", #path of PrecipData/TMinData/TMaxData file
+                  start.year = 2018, 
                   end.year = 2020, 
                   var = "Tmin", #either of "Precip","Tmax" or "Tmin"
-                  save.dest = "C:/Users/merul/OneDrive - iitr.ac.in/PhD_Research/GCM/Mahi/ACCESS-CM2/ssp126", #path of folder where the yearly .nc files are to be stored
+                  save.dest = "Mahi/ACCESS-CM2/ssp126/TMin_nc", #path of folder where the yearly .nc files are to be stored
                   #study.region = shp
                   )
 

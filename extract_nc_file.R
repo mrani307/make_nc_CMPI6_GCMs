@@ -1,13 +1,27 @@
+
 #Aniruddha Saha
 #aniruddha_s@hy.iitr.ac.in
-#CODE RUN at line 163
+
+##################  RUN INSTRUCTIONS   ########################
+
+#Since this is not a package, run instructions are as follows:
+#1. RUN the code from lines 17 to 175  (These lines contains the loading the libraries and the various functions required to run the code)
+#2. Lines 180-181 : Import your shapefile, if you want the .nc files to be masked(clipped) to your study region, else comment it out using "#".
+#3. Lines 192-198 : Provide relevant function arguments and run.
+
+##################  RUN INSTRUCTIONS   ########################
 
 #library ---------------
-library(raster)
-library(rgdal)
-library(ncdf4)
-library(rgdal)
-  
+
+  #installing the required libraries if they arent already installed
+    my_packages <- c("raster", "ncdf4", "rgdal")                                            # Packages required for the code run
+    not_installed <- my_packages[!(my_packages %in% installed.packages()[ , "Package"])]    # Extract not installed packages
+    if(length(not_installed)) install.packages(not_installed)                               # Installing the required packages
+
+  #loading the libraries
+     library(raster)
+     library(ncdf4)
+     library(rgdal)  
 
 #functions----------------------
 
@@ -163,8 +177,8 @@ convert_to_nc<-function(file.dest,start.year,end.year,var,save.dest,study.region
 #RUN-------------------------------
 
   #reading a shapefile (only if I want the netcdf files to be cropped to my study region)
-    shp<-readOGR(dsn="MahiBasin/Datasets/Catchment_Boundary",
-                 layer="Mahi_WtBoundary")
+    shp<-readOGR(dsn="MahiBasin/Datasets/Catchment_Boundary", #path of the directory where the shapefile is present
+                 layer="Mahi_WtBoundary")                     #name of the shapefile, without any extention name (like .shp,.shx)
   
   #converts the Tmin data for the year 2030 to 2040 and crop it to the study region shapefile
 
@@ -180,6 +194,6 @@ convert_to_nc<-function(file.dest,start.year,end.year,var,save.dest,study.region
                   end.year = 2020, 
                   var = "Tmin", #either of "Precip","Tmax" or "Tmin"
                   save.dest = "Mahi/ACCESS-CM2/ssp126/TMin_nc", #path of folder where the yearly .nc files are to be stored
-                  #study.region = shp
+                  study.region = shp  #comment out this whole line if no shapefile input is to be provided
                   )
 

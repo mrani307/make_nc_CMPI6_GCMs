@@ -3,4 +3,4 @@ Prepares yearly .nc file for the Bias-corrected daily projections of precipitati
 
 Also allows for cropping the .nc file for the study region(shapefile)
 
-Data Available : https://doi.org/10.5281/zenodo.3874046
+Data Source of the Bias-corrected CMIP6-GCMs : https://doi.org/10.5281/zenodo.3874046

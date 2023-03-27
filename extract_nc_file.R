@@ -1,11 +1,10 @@
-
 #Aniruddha Saha
 #aniruddha_s@hy.iitr.ac.in
 
 ##################  RUN INSTRUCTIONS   ########################
 
 #Since this is not a package, run instructions are as follows:
-#1. RUN the code from lines 17 to 175  (These lines contains the loading the libraries and the various functions required to run the code)
+#1. RUN the code from lines 16 to 175  (These lines contains the loading the libraries and the various functions required to run the code)
 #2. Lines 180-181 : Import your shapefile, if you want the .nc files to be masked(clipped) to your study region, else comment it out using "#".
 #3. Lines 192-198 : Provide relevant function arguments and run.
 
@@ -155,6 +154,7 @@ convert_to_nc<-function(file.dest,start.year,end.year,var,save.dest,study.region
   #function to extract data for each date and storing it year wise
     prepare_raster_and_nc_yearWise<-function(y)
     {
+      print(paste0("Creating .nc file for the year ",y))
       pos<-which(date.df$year==y)
       r.list<-list()
       for(i in 1:length(pos))
@@ -162,7 +162,7 @@ convert_to_nc<-function(file.dest,start.year,end.year,var,save.dest,study.region
         data<-t(rbind(coord,d[pos[i],])) #prepering xyz data for a particular date for the whole dataset
         r<-makeRaster(data) #converting the xyz data into a raster
          if(flag==1)#checking if a shapefile is provided as argument...
-          r<-mask(crop(r,study.region)) #... then masking the raster to the shapefile
+          r<-mask(crop(r,study.region),study.region) #... then masking the raster to the shapefile
         r.list[[i]]<-r
       }
       names(r.list)<-date[pos]
